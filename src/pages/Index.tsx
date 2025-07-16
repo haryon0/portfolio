@@ -1,12 +1,43 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { Navigation } from "@/components/portfolio/navigation";
+import { HeroSection } from "@/components/portfolio/hero-section";
+import { AboutSection } from "@/components/portfolio/about-section";
+import { SkillsSection } from "@/components/portfolio/skills-section";
+import { ExperienceSection } from "@/components/portfolio/experience-section";
+import { CertificationsSection } from "@/components/portfolio/certifications-section";
+import { ProjectsSection } from "@/components/portfolio/projects-section";
+import { EducationSection } from "@/components/portfolio/education-section";
+import { ContactSection } from "@/components/portfolio/contact-section";
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-background">
+      <Navigation />
+      
+      <main>
+        <section id="hero">
+          <HeroSection />
+        </section>
+        
+        <AboutSection />
+        <SkillsSection />
+        <ExperienceSection />
+        <CertificationsSection />
+        <ProjectsSection />
+        <EducationSection />
+        <ContactSection />
+      </main>
+      
+      {/* Footer */}
+      <footer className="bg-primary text-primary-foreground py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-primary-foreground/90">
+            © 2024 Haryono - IT Network & Infrastructure Specialist. All rights reserved.
+          </p>
+          <p className="text-primary-foreground/70 text-sm mt-2">
+            Built with React, TypeScript, and Tailwind CSS
+          </p>
+        </div>
+      </footer>
     </div>
   );
 };
