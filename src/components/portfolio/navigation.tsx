@@ -6,13 +6,10 @@ export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
 
   const navItems = [
-    { label: "Beranda", href: "#hero" },
     { label: "Tentang", href: "#about" },
-    { label: "Keahlian", href: "#skills" },
     { label: "Pengalaman", href: "#experience" },
-    { label: "Sertifikasi", href: "#certifications" },
     { label: "Proyek", href: "#projects" },
-    { label: "Pendidikan", href: "#education" },
+    { label: "Sertifikasi", href: "#certifications" },
     { label: "Kontak", href: "#contact" }
   ];
 

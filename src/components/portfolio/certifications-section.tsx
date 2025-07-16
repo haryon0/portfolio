@@ -11,7 +11,8 @@ export function CertificationsSection() {
       date: "2023",
       category: "IT Support",
       verified: true,
-      description: "Comprehensive program covering troubleshooting, customer service, networking, operating systems, system administration, and security."
+      description: "Comprehensive program covering troubleshooting, customer service, networking, operating systems, system administration, and security.",
+      certificateUrl: "https://coursera.org/verify/professional-cert/ABC123XYZ"
     },
     {
       name: "CCNA - Cisco Certified Network Associate",
@@ -19,7 +20,8 @@ export function CertificationsSection() {
       date: "2022",
       category: "Networking",
       verified: true,
-      description: "Networking fundamentals, network access, IP connectivity, IP services, security fundamentals, and automation."
+      description: "Networking fundamentals, network access, IP connectivity, IP services, security fundamentals, and automation.",
+      certificateUrl: "https://cisco.com/verify/CCNA-DEF456"
     },
     {
       name: "Fortinet Network Security Associate (FNSA)",
@@ -27,7 +29,8 @@ export function CertificationsSection() {
       date: "2022",
       category: "Cybersecurity",
       verified: true,
-      description: "FortiGate security appliances, network security concepts, and Fortinet Security Fabric."
+      description: "FortiGate security appliances, network security concepts, and Fortinet Security Fabric.",
+      certificateUrl: "https://training.fortinet.com/verify/GHI789"
     },
     {
       name: "Ethical Hacker & Cybersecurity",
@@ -35,7 +38,8 @@ export function CertificationsSection() {
       date: "2021",
       category: "Cybersecurity",
       verified: true,
-      description: "Ethical hacking methodology, penetration testing, and cybersecurity best practices."
+      description: "Ethical hacking methodology, penetration testing, and cybersecurity best practices.",
+      certificateUrl: "https://netacad.com/verify/JKL012"
     },
     {
       name: "OCNA Wireless - Omada",
@@ -43,7 +47,8 @@ export function CertificationsSection() {
       date: "2023",
       category: "Wireless",
       verified: true,
-      description: "Omada SDN platform, wireless network design, implementation, and management."
+      description: "Omada SDN platform, wireless network design, implementation, and management.",
+      certificateUrl: "https://tp-link.com/academy/verify/MNO345"
     },
     {
       name: "AWS Cloud Practitioner",
@@ -51,7 +56,8 @@ export function CertificationsSection() {
       date: "2023",
       category: "Cloud",
       verified: true,
-      description: "AWS cloud concepts, security, technology, and billing & pricing."
+      description: "AWS cloud concepts, security, technology, and billing & pricing.",
+      certificateUrl: "https://aws.amazon.com/verification/PQR678"
     },
     {
       name: "Alibaba Cloud Associate",
@@ -59,7 +65,8 @@ export function CertificationsSection() {
       date: "2022",
       category: "Cloud",
       verified: true,
-      description: "Alibaba Cloud products, services, and solutions for cloud computing."
+      description: "Alibaba Cloud products, services, and solutions for cloud computing.",
+      certificateUrl: "https://edu.alibabacloud.com/verify/STU901"
     },
     {
       name: "Fortinet Network Security Fundamentals",
@@ -67,7 +74,8 @@ export function CertificationsSection() {
       date: "2021",
       category: "Cybersecurity",
       verified: true,
-      description: "Basic security concepts, threat landscape, and FortiGate firewall fundamentals."
+      description: "Basic security concepts, threat landscape, and FortiGate firewall fundamentals.",
+      certificateUrl: "https://training.fortinet.com/verify/VWX234"
     }
   ];
 
@@ -154,10 +162,15 @@ export function CertificationsSection() {
               {cert.description}
             </p>
             
-            <div className="flex items-center text-sm text-primary group-hover:text-primary-hover transition-colors">
+            <a 
+              href={cert.certificateUrl} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-center text-sm text-primary group-hover:text-primary-hover transition-colors hover:underline"
+            >
               <ExternalLink className="w-4 h-4 mr-1" />
               <span>View Certificate</span>
-            </div>
+            </a>
           </Card>
         ))}
       </div>

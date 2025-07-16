@@ -1,11 +1,9 @@
 import { Navigation } from "@/components/portfolio/navigation";
 import { HeroSection } from "@/components/portfolio/hero-section";
 import { AboutSection } from "@/components/portfolio/about-section";
-import { SkillsSection } from "@/components/portfolio/skills-section";
 import { ExperienceSection } from "@/components/portfolio/experience-section";
-import { CertificationsSection } from "@/components/portfolio/certifications-section";
 import { ProjectsSection } from "@/components/portfolio/projects-section";
-import { EducationSection } from "@/components/portfolio/education-section";
+import { CertificationsSection } from "@/components/portfolio/certifications-section";
 import { ContactSection } from "@/components/portfolio/contact-section";
 
 const Index = () => {
@@ -19,11 +17,9 @@ const Index = () => {
         </section>
         
         <AboutSection />
-        <SkillsSection />
         <ExperienceSection />
-        <CertificationsSection />
         <ProjectsSection />
-        <EducationSection />
+        <CertificationsSection />
         <ContactSection />
       </main>
       
