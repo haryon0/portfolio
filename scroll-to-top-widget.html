@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Scroll to Top + Progress (Self-contained, Accessible, No Dependencies)</title>
+  <!--
+    Production-ready "Scroll to Top" floating button with circular progress indicator.
+    - Accessible: semantic <button>, aria-label, focus-visible ring, keyboard operable.
+    - Performance: passive listeners, rAF throttling, cached measurements, ResizeObserver.
+    - UX: respects prefers-reduced-motion for ring updates and scrolling behavior.
+    - Customizable via CSS custom properties and optional data-* attributes on the root.
+    - Supports custom scroll containers via data-scroll-target (CSS selector).
+    - RTL-safe via logical inset properties; safe-area-aware; responsive; light/dark aware.
+    - Graceful degradation: falls back to numeric percentage text if SVG is unavailable.
+  -->
+  <style>
+    /* Namescope all styles under .kst (Kilo Scroll Top) to avoid collisions */
+    .kst {
+      /* Placement: use logical insets for RTL/LTR, with physical fallbacks */
+      position: fixed;
+      bottom: calc(var(--kst-offset, 16px) + env(safe-area-inset-bottom, 0px));
+      right: calc(var(--kst-offset, 16px) + env(safe-area-inset-right, 0px));
+      inset-block-end: calc(var(--kst-offset, 16px) + env(safe-area-inset-bottom, 0px));
+      inset-inline-end: calc(var(--kst-offset, 16px) + env(safe-area-inset-inline-end, 0px));
+      z-index: var(--kst-z, 2147483000); /* high, but below browser UI */
+      pointer-events: none; /* contain clicks to the button only */
+      color-scheme: light dark; /* opt-in to platform color adjustments */
+    }
+
+    /* Optional position variants (applied via JS based on data-position) */
+    .kst.kst--left {
+      right: auto;
+      inset-inline-end: auto;
+      left: calc(var(--kst-offset, 16px) + env(safe-area-inset-left, 0px));
+      inset-inline-start: calc(var(--kst-offset, 16px) + env(safe-area-inset-inline-start, 0px));
+    }
+    .kst.kst--top {
+      bottom: auto;
+      inset-block-end: auto;
+      top: calc(var(--kst-offset, 16px) + env(safe-area-inset-top, 0px));
+      inset-block-start: calc(var(--kst-offset, 16px) + env(safe-area-inset-top, 0px));
+    }
+
+    /* Core button */
+    .kst-btn {
+      pointer-events: auto;
+      inline-size: var(--kst-size, 56px);
+      block-size: var(--kst-size, 56px);
+      min-inline-size: 44px;  /* WCAG touch target minimum */
+      min-block-size: 44px;
+      border: none;
+      border-radius: var(--kst-radius, 12px);
+      background: var(--kst-bg, rgba(250, 250, 250, 0.92));
+      color: var(--kst-fg, #111);
+      box-shadow: var(--kst-elevation, 0 6px 18px rgba(0,0,0,.18));
+      display: grid;
+      place-items: center;
+      position: relative;
+      isolation: isolate; /* keep ring below icon/text */
+      transition: transform .18s ease, opacity .18s ease, box-shadow .18s ease, background-color .18s linear, color .18s linear;
+      opacity: 0;
+      transform: scale(.82);
+      visibility: hidden;
+      will-change: transform, opacity;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .kst--visible .kst-btn {
+      opacity: 1;
+      transform: scale(1);
+      visibility: visible;
+    }
+    .kst-btn:hover {
+      box-shadow: var(--kst-elevation-hover, 0 8px 22px rgba(0,0,0,.22));
+    }
+    .kst-btn:active {
+      transform: scale(.98);
+    }
+    .kst-btn:focus-visible {
+      outline: 3px solid var(--kst-focus, #4C9FFE);
+      outline-offset: 3px;
+    }
+
+    /* Light/Dark theming using variables; users can override via CSS vars */
+    @media (prefers-color-scheme: dark) {
+      .kst {
+        /* No global color change here */
+      }
+      .kst-btn {
+        background: var(--kst-bg, rgba(32, 32, 36, 0.9));
+        color: var(--kst-fg, #FAFAFA);
+        box-shadow: var(--kst-elevation, 0 6px 18px rgba(0,0,0,.45));
+      }
+      .kst-ring-bg {
+        stroke: var(--kst-ring-bg, rgba(255,255,255,.18));
+      }
+    }
+
+    /* SVG circular progress ring */
+    .kst-ring {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg); /* start at top */
+      z-index: -1; /* keep below icon/text */
+    }
+    .kst-ring-bg {
+      fill: none;
+      stroke: var(--kst-ring-bg, rgba(0,0,0,.12));
+      stroke-width: var(--kst-ring, 3);
+    }
+    .kst-ring-fg {
+      fill: none;
+      stroke: var(--kst-ring-fg, currentColor);
+      stroke-linecap: round;
+      stroke-width: var(--kst-ring, 3);
+      transition: stroke-dashoffset .12s linear;
+    }
+
+    /* Button icon (UP arrow) */
+    .kst-icon {
+      font-size: calc(var(--kst-size, 56px) * .42);
+      line-height: 1;
+      transform: translateY(-1px); /* optically center */
+      pointer-events: none;
+    }
+
+    /* Numeric percent fallback text */
+    .kst-text {
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      font-size: calc(var(--kst-size, 56px) * .3);
+      font-weight: 600;
+      color: currentColor;
+      pointer-events: none;
+    }
+    .kst.kst--no-svg .kst-text {
+      display: flex;
+    }
+    .kst.kst--no-svg .kst-ring {
+      display: none;
+    }
+
+    /* Reduced motion: disable animated transitions (ring and show/hide) */
+    @media (prefers-reduced-motion: reduce) {
+      .kst-btn {
+        transition: none;
+      }
+      .kst-ring-fg {
+        transition: none;
+      }
+    }
+
+    /* High-contrast friendly states (approximate) */
+    @media (forced-colors: active) {
+      .kst-btn {
+        border: 1px solid CanvasText;
+        background: Canvas;
+        color: CanvasText;
+        box-shadow: none;
+      }
+      .kst-ring-bg { stroke: GrayText; }
+      .kst-ring-fg { stroke: CanvasText; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Widget root: customize via CSS variables or data-* attributes on .kst -->
+  <div class="kst" id="kst"
+       role="region"
+       aria-label="Scroll to top control"
+       data-threshold="120"
+       data-duration="420"
+       data-easing="easeOutCubic"
+       data-position="br"
+       data-scroll-target="">
+    <button type="button" class="kst-btn" aria-label="Scroll to top" title="Scroll to top">
+      <!-- SVG circular progress (hidden if SVG unsupported) -->
+      <svg class="kst-ring" viewBox="0 0 44 44" focusable="false" aria-hidden="true">
+        <circle class="kst-ring-bg" cx="22" cy="22" r="20"></circle>
+        <circle class="kst-ring-fg" cx="22" cy="22" r="20"></circle>
+      </svg>
+      <span class="kst-icon" aria-hidden="true">↑</span>
+      <span class="kst-text" aria-hidden="true">0%</span>
+    </button>
+  </div>
+
+  <script>
+  (function () {
+    'use strict';
+    /* Kilo Scroll Top: self-contained module with no globals */
+
+    /** Utility: clamp a number between min and max */
+    function clamp(v, min, max) { return Math.min(max, Math.max(min, v)); }
+
+    /** Easing functions for custom scroll animation (can be extended) */
+    function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+    function easeOutQuad(t)  { return 1 - (1 - t) * (1 - t); }
+
+    /** Cache selectors and DOM references */
+    var root = document.getElementById('kst');
+    if (!root) return;
+    var btn  = root.querySelector('.kst-btn');
+    var ringFg = root.querySelector('.kst-ring-fg');
+    var ringBg = root.querySelector('.kst-ring-bg');
+    var textEl = root.querySelector('.kst-text');
+
+    /** Map optional data-* attributes to CSS custom properties for easy theming */
+   ;(function applyDataAttributesToVars() {
+      var ds = root.dataset;
+      var mappings = {
+        size: '--kst-size',
+        offset: '--kst-offset',
+        thickness: '--kst-ring',
+        radius: '--kst-radius',
+        elevation: '--kst-elevation',
+        z: '--kst-z',
+        focus: '--kst-focus',
+        bg: '--kst-bg',
+        fg: '--kst-fg',
+        ringBg: '--kst-ring-bg',
+        ringFg: '--kst-ring-fg'
+      };
+      Object.keys(mappings).forEach(function (key) {
+        var val = ds[key];
+        if (val) root.style.setProperty(mappings[key], val);
+      });
+    })();
+
+    /** Handle position variants (bottom-right default) */
+    (function applyPosition() {
+      var pos = (root.dataset.position || 'br').toLowerCase();
+      // Reset classes first
+      root.classList.remove('kst--left', 'kst--top');
+      if (pos.includes('l')) root.classList.add('kst--left');
+      if (pos.includes('t')) root.classList.add('kst--top');
+    })();
+
+    /** Feature detection: SVG support (simple heuristic) */
+    var supportsSVG = (function () {
+      try {
+        return !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect;
+      } catch (e) { return false; }
+    })();
+    if (!supportsSVG) {
+      root.classList.add('kst--no-svg');
+    }
+
+    /** Determine scroll container: window/document or a specific element */
+    var scrollTargetSelector = (root.dataset.scrollTarget || '').trim();
+    var scroller = (function resolveScroller() {
+      if (scrollTargetSelector) {
+        var el = document.querySelector(scrollTargetSelector);
+        if (el && el.scrollHeight && typeof el.scrollTop === 'number') return el;
+      }
+      return document.scrollingElement || document.documentElement;
+    })();
+
+    /** State for throttled updates and animation */
+    var isRafScheduled = false;
+    var lastKnownScrollTop = 0;
+    var maxScroll = 1; // avoid division by zero
+    var circumference = 2 * Math.PI * 20; // r = 20 as in SVG
+    var thresholdPx = Math.max(0, parseInt(root.dataset.threshold || '120', 10) || 0);
+    var prefersReducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var isAnimating = false;
+    var cancelAnimation = function(){};
+
+    /** Write initial ring geometry */
+    if (supportsSVG && ringFg) {
+      ringFg.setAttribute('stroke-dasharray', String(circumference));
+      ringFg.setAttribute('stroke-dashoffset', String(circumference));
+    }
+
+    /** Compute current scroll metrics without forcing layout thrash */
+    function recalc() {
+      // For elements: clientHeight & scrollHeight are cheap to read
+      var scrollHeight = scroller.scrollHeight;
+      var clientHeight = scroller.clientHeight;
+      maxScroll = Math.max(1, scrollHeight - clientHeight);
+      // Update immediately to avoid stale ring on content changes
+      lastKnownScrollTop = scroller.scrollTop || 0;
+      scheduleUpdate();
+    }
+
+    /** rAF-throttled update for progress and visibility */
+    function scheduleUpdate() {
+      if (isRafScheduled) return;
+      isRafScheduled = true;
+      requestAnimationFrame(update);
+    }
+    function update() {
+      isRafScheduled = false;
+      var st = scroller.scrollTop || 0;
+      lastKnownScrollTop = st;
+      var progress = clamp(st / maxScroll, 0, 1);
+      // Update ring stroke
+      if (supportsSVG && ringFg) {
+        var offset = circumference * (1 - progress);
+        ringFg.style.strokeDashoffset = String(offset);
+      } else if (textEl) {
+        textEl.textContent = String(Math.round(progress * 100)) + '%';
+      }
+      // Toggle visibility based on threshold
+      if (st > thresholdPx) {
+        root.classList.add('kst--visible');
+      } else {
+        root.classList.remove('kst--visible');
+      }
+    }
+
+    /** Passive scroll listener + rAF throttling */
+    scroller.addEventListener('scroll', function () {
+      scheduleUpdate();
+    }, { passive: true });
+
+    /** ResizeObserver to recalc when container size/content changes */
+    var resizeObserver = new ResizeObserver(function () { recalc(); });
+    // Observe scroller for size changes; also observe body if scroller is document
+    resizeObserver.observe(scroller === document.documentElement ? document.body : scroller);
+    // Fallback: recalc on window resize as well
+    window.addEventListener('resize', function () { recalc(); }, { passive: true });
+
+    /** MutationObserver to recalc when subtree changes potentially affect height */
+    var moTarget = scroller === document.documentElement ? document.body : scroller;
+    var mutationObserver = new MutationObserver(function () { recalc(); });
+    mutationObserver.observe(moTarget, { childList: true, subtree: true, characterData: true });
+
+    /** Interruptible smooth scroll to top with customizable duration/easing */
+    function animateToTop() {
+      // Cancel any existing animation
+      if (isAnimating && cancelAnimation) cancelAnimation();
+      var duration = Math.max(0, parseInt(root.dataset.duration || '420', 10) || 0);
+      var easingName = (root.dataset.easing || 'easeOutCubic').toLowerCase();
+      var easing = (easingName === 'easeoutquad') ? easeOutQuad : easeOutCubic;
+      var start = performance.now();
+      var fromY = scroller.scrollTop || 0;
+      var fromX = scroller.scrollLeft || 0;
+      if (fromY <= 0) return;
+      isAnimating = true;
+      var stopped = false;
+      cancelAnimation = function(){ stopped = true; isAnimating = false; };
+
+      function step(now) {
+        if (stopped) return;
+        var t = duration === 0 ? 1 : (now - start) / duration;
+        if (t >= 1) t = 1;
+        var eased = duration === 0 ? 1 : easing(t);
+        var newY = Math.round(fromY * (1 - eased));
+        if (scroller === document.documentElement) {
+          window.scrollTo({ top: newY, left: fromX, behavior: 'auto' });
+        } else {
+          scroller.scrollTop = newY;
+        }
+        if (t < 1) {
+          requestAnimationFrame(step);
+        } else {
+          isAnimating = false;
+        }
+      }
+      requestAnimationFrame(step);
+    }
+
+    /** Cancel animation if user interacts (wheel/touch/key) */
+    var cancelers = [
+      ['wheel', { passive: true }],
+      ['touchstart', { passive: true }],
+      ['touchmove', { passive: true }],
+      ['keydown', { passive: true }]
+    ];
+    cancelers.forEach(function(entry){
+      window.addEventListener(entry[0], function(){ if (isAnimating) cancelAnimation(); }, entry[1]);
+    });
+
+    /** Click handler: honor prefers-reduced-motion (instant jump) */
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      if (prefersReducedMotion) {
+        // Instant jump to top
+        if (scroller === document.documentElement) {
+          window.scrollTo({ top: 0, left: window.scrollX || 0, behavior: 'auto' });
+        } else {
+          scroller.scrollTop = 0;
+        }
+      } else {
+        animateToTop();
+      }
+    });
+
+    /** Keep reduced-motion preference in sync if user changes system setting */
+    var rmMedia = matchMedia('(prefers-reduced-motion: reduce)');
+    rmMedia.addEventListener('change', function (e) {
+      prefersReducedMotion = e.matches;
+    });
+
+    /** Init measurements and initial paint */
+    recalc();
+    scheduleUpdate();
+  })();
+  </script>
+
+  <!--
+    USAGE (Quick Reference):
+    - Copy this single HTML file into your page or extract the .kst block + <style> + <script>.
+    - Customize via data-* on the .kst root:
+        data-threshold="120"     // Pixels to scroll before showing button
+        data-duration="420"      // Scroll-to-top duration in ms (ignored if prefers-reduced-motion)
+        data-easing="easeOutCubic" // "easeOutCubic" (default) or "easeOutQuad"
+        data-position="br"       // br (default), bl, tr, tl
+        data-scroll-target="#myScrollableDiv" // CSS selector for custom scroll container
+    - Or via CSS variables on .kst (inline style or stylesheet):
+        --kst-size: 56px;        /* Button size (min 44px) */
+        --kst-offset: 16px;      /* Distance from edges (safe-area aware) */
+        --kst-radius: 12px;      /* Corner radius */
+        --kst-ring: 3px;         /* Progress ring thickness */
+        --kst-z: 2147483000;     /* Z-index */
+        --kst-bg: rgba(250,250,250,.92); /* Background */
+        --kst-fg: #111;          /* Foreground/text and ring color */
+        --kst-ring-bg: rgba(0,0,0,.12); /* Ring track color */
+        --kst-ring-fg: currentColor;    /* Ring progress color */
+        --kst-focus: #4C9FFE;    /* Focus outline color */
+    - RTL is handled automatically via logical inset properties.
+    - The ring progress updates rAF-throttled; numeric percent appears if SVG unsupported.
+  -->
+</body>
+</html>

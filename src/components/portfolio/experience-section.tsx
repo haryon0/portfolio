@@ -7,42 +7,46 @@ export function ExperienceSection() {
   const experiences = [
     {
       company: "PT Halmahera Persada Lygend",
-      position: "IT Network Infrastructure Staff",
-      period: "2021 - Sekarang",
-      location: "Site Mining Operations",
+      position: "Senior IT Network Infrastructure",
+      period: "Sept 2021 - Sekarang",
+      location: "Site Kawasi",
       type: "Full-time",
       responsibilities: [
-        "Mengelola dan memelihara jaringan multi-site dengan 200+ endpoint",
-        "Implementasi dan maintenance sistem VoIP untuk komunikasi site",
-        "Monitoring dan troubleshooting sistem CCTV dan keamanan jaringan",
-        "Pemasangan dan konfigurasi infrastruktur wireless dan fiber optic",
-        "Meningkatkan network uptime hingga 99.5% melalui proactive monitoring",
-        "Koordinasi dengan vendor untuk upgrade infrastruktur jaringan"
+        "Mengelola dan mengoptimalkan infrastruktur jaringan untuk meningkatkan stabilitas dan uptime koneksi di berbagai lokasi",
+        "Konfigurasi dan instalasi perangkat jaringan (router, switch, firewall) untuk optimasi efisiensi operasional",
+        "Monitoring kinerja jaringan real-time dan penyelesaian masalah kompleks untuk menjaga kelancaran bisnis",
+        "Perancangan dan implementasi infrastruktur fiber optic untuk komunikasi antar divisi berkecepatan tinggi",
+        "Pengembangan solusi komunikasi wireless (point-to-point dan point-to-multipoint) untuk lokasi terpencil",
+        "Instalasi dan konfigurasi sistem CCTV untuk peningkatan keamanan area operasional",
+        "Manajemen sistem radio komunikasi Hytera & ICOM termasuk migrasi dari analog ke digital"
       ],
       achievements: [
-        "Berhasil mengimplementasikan AD & SSO di Harita Group",
-        "Memimpin proyek penguatan Telkomsel 4G di Site Kawasi",
-        "Melakukan migrasi sistem komunikasi ICOM ke Hytera"
+        "Berhasil meningkatkan stabilitas jaringan dan mencapai uptime 99.9% di seluruh lokasi operasional",
+        "Implementasi sistem fiber optic yang meningkatkan kecepatan transfer data hingga 10x lipat",
+        "Optimasi sistem radio komunikasi dengan peningkatan coverage area hingga 40%",
+        "Modernisasi infrastruktur dengan migrasi dari sistem analog (VHF) ke digital (UHF)"
       ]
     },
     {
       company: "PT Tupai Adyamas Indonesia",
-      position: "IT Support Staff",
-      period: "2015 - 2021",
-      location: "Jakarta",
+      position: "Section Chief IT",
+      period: "Feb 2015 - Sept 2021",
+      location: "Boyolali",
       type: "Full-time", 
       responsibilities: [
-        "Memberikan technical support untuk 150+ karyawan",
-        "Maintenance dan troubleshooting hardware & software",
-        "Manajemen inventory dan asset IT perusahaan",
-        "Setup dan konfigurasi workstation baru",
-        "Dokumentasi sistem dan prosedur IT",
-        "Helpdesk support dan user training"
+        "Memimpin layanan dukungan teknis untuk 50+ pengguna dengan standar SLA yang ketat",
+        "Mengarahkan proses instalasi, konfigurasi, dan pemeliharaan perangkat IT secara komprehensif",
+        "Pengelolaan sistem helpdesk IT dengan fokus pada peningkatan efisiensi penanganan tiket",
+        "Analisis root cause dan koordinasi tindakan korektif untuk minimalisasi downtime",
+        "Supervisi pengelolaan database aset IT dan konfigurasi perangkat",
+        "Implementasi jadwal maintenance berkala untuk sistem dan infrastruktur IT",
+        "Koordinasi dengan vendor eksternal untuk penanganan masalah IT kritis"
       ],
       achievements: [
-        "Meningkatkan response time helpdesk dari 4 jam menjadi 1 jam",
-        "Implementasi sistem ticketing GLPI untuk tracking issues",
-        "Mengurangi downtime sistem hingga 60% melalui preventive maintenance"
+        "Optimasi proses helpdesk dengan pengurangan response time sebesar 75%",
+        "Implementasi sistem manajemen aset IT yang meningkatkan akurasi inventaris hingga 98%",
+        "Pengurangan downtime sistem sebesar 60% melalui preventive maintenance",
+        "Berhasil mengimplementasi sistem CCTV terintegrasi di seluruh area operasional"
       ]
     }
   ];
@@ -134,30 +138,6 @@ export function ExperienceSection() {
             </div>
           </Card>
         ))}
-      </div>
-
-      {/* Experience Summary */}
-      <div className="mt-16">
-        <Card className="p-8 bg-gradient-secondary">
-          <div className="grid md:grid-cols-4 gap-6 text-center">
-            <div>
-              <div className="text-3xl font-bold text-primary mb-2">8+</div>
-              <div className="text-muted-foreground">Tahun Pengalaman</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-primary mb-2">350+</div>
-              <div className="text-muted-foreground">Endpoint Dikelola</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-primary mb-2">15+</div>
-              <div className="text-muted-foreground">Proyek Selesai</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-primary mb-2">99.5%</div>
-              <div className="text-muted-foreground">Network Uptime</div>
-            </div>
-          </div>
-        </Card>
       </div>
     </Section>
   );

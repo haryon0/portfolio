@@ -1,251 +1,315 @@
-import { Section } from "@/components/ui/section";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { FolderOpen, Calendar, Users, ChevronRight, ExternalLink } from "lucide-react";
+import { 
+  FolderOpen, 
+  Calendar, 
+  Users, 
+  ArrowRight, 
+  ExternalLink,
+  CheckCircle2,
+  TrendingUp
+} from "lucide-react";
+
+interface Project {
+  title: string;
+  description: string;
+  category: "Infrastructure" | "Network" | "Communication" | "Telecommunications";
+  period: string;
+  teamSize: string;
+  technologies: string[];
+  challenges: string[];
+  results: string[];
+  status: "Completed" | "In Progress";
+  impact: string;
+}
 
 export function ProjectsSection() {
-  const projects = [
+  const projects: Project[] = [
     {
       title: "Implementasi AD & SSO di Harita Group",
-      description: "Proyek migrasi dan implementasi sistem Active Directory dan Single Sign-On untuk meningkatkan keamanan dan efisiensi akses user di seluruh perusahaan grup.",
+      description: "Proyek strategis migrasi dan implementasi sistem Active Directory dan Single Sign-On untuk meningkatkan keamanan dan efisiensi akses user di seluruh perusahaan grup dengan 1000+ users.",
       category: "Infrastructure",
       period: "2022 - 2023",
       teamSize: "5 orang",
-      technologies: ["Active Directory", "Windows Server", "LDAP", "SSO", "PowerShell"],
+      impact: "Mengurangi 70% waktu login dan 60% helpdesk tickets",
+      technologies: ["Active Directory", "Windows Server 2019", "LDAP", "SSO", "PowerShell", "Group Policy"],
       challenges: [
-        "Migrasi data user dari sistem legacy tanpa downtime",
-        "Integrasi dengan aplikasi existing yang berbeda platform",
-        "Training user untuk adaptasi sistem baru"
+        "Migrasi 1000+ user accounts tanpa service disruption",
+        "Integrasi dengan 15+ aplikasi legacy berbeda platform",
+        "Training dan change management untuk 200+ staff"
       ],
       results: [
         "Mengurangi waktu login user hingga 70%",
-        "Meningkatkan keamanan akses dengan centralized authentication",
-        "Mengurangi helpdesk ticket terkait password reset sebesar 60%"
+        "Meningkatkan keamanan dengan centralized authentication",
+        "Mengurangi helpdesk ticket password reset sebesar 60%",
+        "Zero downtime selama migrasi"
       ],
       status: "Completed"
     },
     {
       title: "Penguatan Telkomsel 4G di Site Kawasi",
-      description: "Proyek peningkatan infrastruktur komunikasi seluler di lokasi mining terpencil untuk memastikan konektivitas yang stabil bagi operasional site.",
+      description: "Proyek kritis peningkatan infrastruktur komunikasi seluler di lokasi mining terpencil untuk memastikan konektivitas yang stabil bagi operasional 24/7 site production.",
       category: "Network",
       period: "2022",
       teamSize: "3 orang",
-      technologies: ["4G LTE", "Antenna Systems", "Signal Boosters", "Network Monitoring"],
+      impact: "Meningkatkan uptime komunikasi hingga 95%",
+      technologies: ["4G LTE", "Antenna Systems", "Signal Boosters", "Network Monitoring", "Site Survey Tools"],
       challenges: [
-        "Lokasi geografis yang sulit dijangkau",
-        "Cuaca ekstrem dan kondisi lingkungan harsh",
-        "Koordinasi dengan operator telekomunikasi"
+        "Lokasi geografis ekstrem dengan akses terbatas",
+        "Cuaca harsh dan kondisi lingkungan mining",
+        "Koordinasi kompleks dengan operator Telkomsel"
       ],
       results: [
-        "Meningkatkan signal strength dari -110dBm menjadi -85dBm",
-        "Memperbaiki call success rate hingga 95%",
-        "Mengurangi komunikasi blackout sebesar 80%"
+        "Meningkatkan signal strength dari -110dBm ke -85dBm",
+        "Call success rate meningkat ke 95%",
+        "Mengurangi komunikasi blackout sebesar 80%",
+        "Coverage area bertambah 40%"
       ],
       status: "Completed"
     },
     {
       title: "Pengadaan GPS Fleet & Migrasi ICOM ke Hytera",
-      description: "Proyek modernisasi sistem komunikasi dan tracking kendaraan operasional dengan teknologi GPS dan radio komunikasi yang lebih advanced.",
+      description: "Proyek modernisasi sistem komunikasi dan tracking kendaraan operasional dengan teknologi GPS dan radio komunikasi advanced untuk 50+ unit fleet vehicles.",
       category: "Communication",
       period: "2023",
       teamSize: "4 orang",
-      technologies: ["GPS Tracking", "Hytera Radio", "Fleet Management", "API Integration"],
+      impact: "Optimasi operasional fleet hingga 25%",
+      technologies: ["GPS Tracking", "Hytera DMR Radio", "Fleet Management System", "API Integration", "Real-time Dashboard"],
       challenges: [
-        "Migrasi dari sistem ICOM ke Hytera tanpa mengganggu operasi",
-        "Integrasi GPS tracking dengan sistem fleet management existing",
-        "Training operator untuk menggunakan perangkat baru"
+        "Migrasi dari ICOM ke Hytera tanpa operational disruption",
+        "Integrasi GPS tracking dengan SAP fleet management",
+        "Training 100+ drivers dan operators untuk new equipment"
       ],
       results: [
         "Real-time tracking untuk 50+ kendaraan operasional",
-        "Meningkatkan response time emergency hingga 40%",
-        "Mengurangi fuel cost melalui optimized routing sebesar 15%"
+        "Response time emergency berkurang 40%",
+        "Fuel cost reduction 15% through optimized routing",
+        "Maintenance cost turun 20%"
       ],
       status: "Completed"
     },
     {
       title: "SKKL Telkom - CLS Project",
-      description: "Proyek implementasi Customer Line Service untuk meningkatkan kualitas layanan telekomunikasi dan monitoring real-time performance jaringan.",
+      description: "Implementasi Customer Line Service untuk meningkatkan kualitas layanan telekomunikasi dan monitoring real-time performance jaringan untuk 1000+ customer lines.",
       category: "Telecommunications",
       period: "2021 - 2022",
       teamSize: "6 orang",
-      technologies: ["CLS Platform", "Network Monitoring", "Telkom Infrastructure", "API"],
+      impact: "Meningkatkan customer satisfaction 25%",
+      technologies: ["CLS Platform", "Network Monitoring Tools", "Telkom Infrastructure", "REST API", "Real-time Analytics"],
       challenges: [
         "Integrasi dengan infrastruktur Telkom yang kompleks",
-        "Memastikan compliance dengan standar telekomunikasi",
-        "Monitoring real-time untuk thousands of connections"
+        "Compliance dengan standar telekomunikasi nasional",
+        "Real-time monitoring untuk ribuan connections"
       ],
       results: [
-        "Monitoring real-time untuk 1000+ customer lines",
-        "Mengurangi downtime detection time dari hours ke minutes",
-        "Meningkatkan customer satisfaction score sebesar 25%"
+        "Real-time monitoring untuk 1000+ customer lines",
+        "Downtime detection dari hours ke minutes",
+        "Customer satisfaction score naik 25%",
+        "SLA compliance meningkat ke 99.5%"
       ],
       status: "Completed"
     }
   ];
 
-  const getCategoryColor = (category: string) => {
-    const colors: Record<string, string> = {
-      "Infrastructure": "bg-blue-500/10 text-blue-600 border-blue-200",
-      "Network": "bg-green-500/10 text-green-600 border-green-200",
-      "Communication": "bg-purple-500/10 text-purple-600 border-purple-200",
-      "Telecommunications": "bg-orange-500/10 text-orange-600 border-orange-200"
+  const getCategoryConfig = (category: string) => {
+    const configs = {
+      "Infrastructure": {
+        color: "bg-blue-500/10 text-blue-600 border-blue-200 dark:border-blue-800",
+        gradient: "from-blue-500 to-blue-600",
+        icon: "🏗️"
+      },
+      "Network": {
+        color: "bg-green-500/10 text-green-600 border-green-200 dark:border-green-800",
+        gradient: "from-green-500 to-green-600",
+        icon: "🌐"
+      },
+      "Communication": {
+        color: "bg-purple-500/10 text-purple-600 border-purple-200 dark:border-purple-800",
+        gradient: "from-purple-500 to-purple-600",
+        icon: "📡"
+      },
+      "Telecommunications": {
+        color: "bg-orange-500/10 text-orange-600 border-orange-200 dark:border-orange-800",
+        gradient: "from-orange-500 to-orange-600",
+        icon: "📞"
+      }
     };
-    return colors[category] || "bg-gray-500/10 text-gray-600 border-gray-200";
+    return configs[category as keyof typeof configs] || configs.Infrastructure;
   };
 
   return (
-    <Section id="projects" className="bg-background">
-      <div className="text-center mb-16">
-        <Badge variant="outline" className="mb-4 text-primary border-primary">
-          Proyek Unggulan
-        </Badge>
-        <h2 className="text-4xl font-bold text-foreground mb-6">
-          Proyek & Implementasi Terbaru
-        </h2>
-        <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-          Koleksi proyek-proyek infrastruktur IT yang telah berhasil diselesaikan dengan dampak positif bagi organisasi
-        </p>
-      </div>
+    <section id="projects" className="py-24 bg-background relative overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute inset-0 bg-gradient-hero opacity-50" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-20" />
 
-      <div className="space-y-8">
-        {projects.map((project, index) => (
-          <Card 
-            key={index}
-            className="p-8 hover:shadow-professional transition-all duration-300 border-l-4 border-l-accent"
-          >
-            <div className="grid lg:grid-cols-3 gap-8">
-              {/* Project Overview */}
-              <div className="lg:col-span-1">
-                <div className="flex items-start space-x-3 mb-4">
-                  <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <FolderOpen className="w-6 h-6 text-accent" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold text-foreground mb-2">
-                      {project.title}
-                    </h3>
-                    <Badge 
-                      variant="outline" 
-                      className={`mb-3 ${getCategoryColor(project.category)}`}
-                    >
-                      {project.category}
-                    </Badge>
-                  </div>
-                </div>
-                
-                <p className="text-muted-foreground text-sm mb-4 leading-relaxed">
-                  {project.description}
-                </p>
-                
-                <div className="space-y-2 text-sm text-muted-foreground">
-                  <div className="flex items-center">
-                    <Calendar className="w-4 h-4 mr-2" />
-                    {project.period}
-                  </div>
-                  <div className="flex items-center">
-                    <Users className="w-4 h-4 mr-2" />
-                    Tim: {project.teamSize}
-                  </div>
-                  <Badge 
-                    variant={project.status === "Completed" ? "default" : "secondary"}
-                    className="mt-2"
-                  >
-                    {project.status}
-                  </Badge>
-                </div>
-              </div>
+      <div className="container relative z-10 px-6">
+        <div className="max-w-7xl mx-auto">
+          {/* Section Header */}
+          <div className="text-center mb-16 space-y-4 animate-fade-in">
+            <Badge 
+              variant="outline" 
+              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium border-primary/30 bg-primary/5"
+            >
+              <FolderOpen className="w-4 h-4" />
+              <span>Portfolio Proyek</span>
+            </Badge>
+            
+            <h2 className="text-4xl md:text-5xl font-bold">
+              <span className="text-foreground">Proyek & Implementasi</span>
+              <br />
+              <span className="text-gradient">Terbaru</span>
+            </h2>
+            
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              Koleksi proyek infrastruktur IT yang telah berhasil diselesaikan dengan 
+              dampak positif signifikan bagi operasional organisasi
+            </p>
+          </div>
 
-              {/* Project Details */}
-              <div className="lg:col-span-2">
-                <div className="grid md:grid-cols-2 gap-6">
-                  {/* Technologies & Challenges */}
-                  <div className="space-y-6">
-                    <div>
-                      <h4 className="text-lg font-semibold text-foreground mb-3">
-                        Teknologi yang Digunakan
-                      </h4>
-                      <div className="flex flex-wrap gap-2">
-                        {project.technologies.map((tech, i) => (
-                          <Badge key={i} variant="secondary" className="text-xs">
-                            {tech}
+          {/* Projects Grid */}
+          <div className="space-y-8">
+            {projects.map((project, index) => {
+              const categoryConfig = getCategoryConfig(project.category);
+              
+              return (
+                <Card 
+                  key={index}
+                  className="group overflow-hidden border-2 hover:border-primary/30 transition-all duration-500 hover-lift bg-card/80 backdrop-blur-sm"
+                  style={{
+                    animationDelay: `${index * 100}ms`,
+                  }}
+                >
+                  <div className="grid lg:grid-cols-12 gap-0">
+                    {/* Left Column - Project Info */}
+                    <div className="lg:col-span-5 p-8 bg-gradient-to-br from-secondary/30 to-background border-r border-border/50">
+                      <div className="space-y-6">
+                        {/* Category Badge & Status */}
+                        <div className="flex items-center justify-between flex-wrap gap-3">
+                          <Badge 
+                            variant="outline" 
+                            className={`${categoryConfig.color} font-semibold px-3 py-1`}
+                          >
+                            <span className="mr-2">{categoryConfig.icon}</span>
+                            {project.category}
                           </Badge>
-                        ))}
+                          <Badge 
+                            variant={project.status === "Completed" ? "default" : "secondary"}
+                            className="bg-primary text-primary-foreground"
+                          >
+                            <CheckCircle2 className="w-3 h-3 mr-1" />
+                            {project.status}
+                          </Badge>
+                        </div>
+
+                        {/* Project Title */}
+                        <div>
+                          <h3 className="text-2xl font-bold text-foreground mb-3 group-hover:text-gradient transition-all">
+                            {project.title}
+                          </h3>
+                          <p className="text-muted-foreground leading-relaxed">
+                            {project.description}
+                          </p>
+                        </div>
+
+                        {/* Impact Highlight */}
+                        <div className="p-4 rounded-xl bg-accent/10 border border-accent/20">
+                          <div className="flex items-center gap-2 text-accent mb-1">
+                            <TrendingUp className="w-4 h-4" />
+                            <span className="text-sm font-semibold">Key Impact</span>
+                          </div>
+                          <p className="text-sm font-medium text-foreground">{project.impact}</p>
+                        </div>
+
+                        {/* Meta Info */}
+                        <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+                          <div className="flex items-center gap-2">
+                            <Calendar className="w-4 h-4 text-primary" />
+                            <span>{project.period}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Users className="w-4 h-4 text-primary" />
+                            <span>Tim: {project.teamSize}</span>
+                          </div>
+                        </div>
+
+                        {/* Action Button */}
+                        
                       </div>
                     </div>
-                    
-                    <div>
-                      <h4 className="text-lg font-semibold text-foreground mb-3">
-                        Tantangan Utama
-                      </h4>
-                      <ul className="space-y-2">
-                        {project.challenges.map((challenge, i) => (
-                          <li key={i} className="flex items-start text-sm text-muted-foreground">
-                            <ChevronRight className="w-4 h-4 mr-2 mt-0.5 text-accent flex-shrink-0" />
-                            {challenge}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                  
-                  {/* Results & Actions */}
-                  <div className="space-y-6">
-                    <div>
-                      <h4 className="text-lg font-semibold text-foreground mb-3">
-                        Hasil & Dampak
-                      </h4>
-                      <ul className="space-y-2">
-                        {project.results.map((result, i) => (
-                          <li key={i} className="flex items-start text-sm text-muted-foreground">
-                            <div className="w-2 h-2 bg-primary rounded-full mr-3 mt-2 flex-shrink-0"></div>
-                            <span className="font-medium">{result}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    
-                    <div className="pt-4">
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        className="hover:bg-primary hover:text-primary-foreground"
-                      >
-                        <ExternalLink className="w-4 h-4 mr-2" />
-                        Detail Proyek
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Card>
-        ))}
-      </div>
 
-      {/* Project Summary */}
-      <div className="mt-16">
-        <Card className="p-8 bg-gradient-secondary">
-          <div className="grid md:grid-cols-4 gap-6 text-center">
-            <div>
-              <div className="text-3xl font-bold text-primary mb-2">4</div>
-              <div className="text-muted-foreground">Proyek Major</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-primary mb-2">100%</div>
-              <div className="text-muted-foreground">Success Rate</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-primary mb-2">18</div>
-              <div className="text-muted-foreground">Tim Members</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-primary mb-2">60%</div>
-              <div className="text-muted-foreground">Avg Improvement</div>
-            </div>
+                    {/* Right Column - Details */}
+                    <div className="lg:col-span-7 p-8">
+                      <div className="grid md:grid-cols-2 gap-8 h-full">
+                        {/* Technologies */}
+                        <div className="space-y-4">
+                          <h4 className="text-sm font-bold text-foreground uppercase tracking-wide flex items-center gap-2">
+                            <div className="w-1 h-4 bg-primary rounded-full" />
+                            Teknologi
+                          </h4>
+                          <div className="flex flex-wrap gap-2">
+                            {project.technologies.map((tech, i) => (
+                              <Badge 
+                                key={i} 
+                                variant="secondary" 
+                                className="text-xs font-medium bg-secondary/80 hover:bg-primary/10 hover:text-primary transition-colors"
+                              >
+                                {tech}
+                              </Badge>
+                            ))}
+                          </div>
+
+                          {/* Challenges */}
+                          <div className="pt-4">
+                            <h4 className="text-sm font-bold text-foreground uppercase tracking-wide flex items-center gap-2 mb-3">
+                              <div className="w-1 h-4 bg-accent rounded-full" />
+                              Tantangan
+                            </h4>
+                            <ul className="space-y-2">
+                              {project.challenges.map((challenge, i) => (
+                                <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                                  <ArrowRight className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
+                                  <span>{challenge}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+
+                        {/* Results */}
+                        <div className="space-y-4">
+                          <h4 className="text-sm font-bold text-foreground uppercase tracking-wide flex items-center gap-2">
+                            <div className="w-1 h-4 bg-green-500 rounded-full" />
+                            Hasil & Dampak
+                          </h4>
+                          <ul className="space-y-3">
+                            {project.results.map((result, i) => (
+                              <li key={i} className="flex items-start gap-3 group/item">
+                                <div className="w-6 h-6 rounded-full bg-green-500/10 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover/item:bg-green-500 transition-colors">
+                                  <CheckCircle2 className="w-4 h-4 text-green-600 group-hover/item:text-white transition-colors" />
+                                </div>
+                                <span className="text-sm font-medium text-foreground leading-relaxed">
+                                  {result}
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Bottom Gradient Line */}
+                  <div className={`h-1 w-full bg-gradient-to-r ${categoryConfig.gradient} opacity-0 group-hover:opacity-100 transition-opacity`} />
+                </Card>
+              );
+            })}
           </div>
-        </Card>
+
+          {/* CTA Section */}
+        </div>
       </div>
-    </Section>
+    </section>
   );
 }

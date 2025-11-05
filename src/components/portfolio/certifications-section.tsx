@@ -12,70 +12,79 @@ export function CertificationsSection() {
       category: "IT Support",
       verified: true,
       description: "Comprehensive program covering troubleshooting, customer service, networking, operating systems, system administration, and security.",
-      certificateUrl: "https://coursera.org/verify/professional-cert/ABC123XYZ"
+      certificateUrl: "https://coursera.org/share/c105c3a8eae035d200723b7af4eba7a6"
     },
     {
-      name: "CCNA - Cisco Certified Network Associate",
+      name: "Introduction to Cybersecurity",
       issuer: "Cisco",
-      date: "2022",
+      date: "2024",
       category: "Networking",
       verified: true,
       description: "Networking fundamentals, network access, IP connectivity, IP services, security fundamentals, and automation.",
-      certificateUrl: "https://cisco.com/verify/CCNA-DEF456"
+      certificateUrl: "https://www.credly.com/badges/bf431dee-6290-42fa-91da-3efb0fe1bde1/public_url"
     },
     {
-      name: "Fortinet Network Security Associate (FNSA)",
+      name: "Fortinet Certified Fundamentals Cybersecurity",
       issuer: "Fortinet",
-      date: "2022",
+      date: "2025",
       category: "Cybersecurity",
       verified: true,
       description: "FortiGate security appliances, network security concepts, and Fortinet Security Fabric.",
-      certificateUrl: "https://training.fortinet.com/verify/GHI789"
+      certificateUrl: "https://www.credly.com/badges/5085d3c0-6566-464f-938e-9b2769cb01d8/public_url"
     },
     {
-      name: "Ethical Hacker & Cybersecurity",
+      name: "Ethical Hacker",
       issuer: "Cisco Networking Academy",
       date: "2021",
       category: "Cybersecurity",
       verified: true,
       description: "Ethical hacking methodology, penetration testing, and cybersecurity best practices.",
-      certificateUrl: "https://netacad.com/verify/JKL012"
+      certificateUrl: "https://www.credly.com/badges/6b0a646c-1371-49e6-af50-e9e947501393/public_url"
     },
     {
       name: "OCNA Wireless - Omada",
       issuer: "TP-Link",
-      date: "2023",
+      date: "2025",
       category: "Wireless",
       verified: true,
       description: "Omada SDN platform, wireless network design, implementation, and management.",
       certificateUrl: "https://tp-link.com/academy/verify/MNO345"
     },
     {
-      name: "AWS Cloud Practitioner",
-      issuer: "Amazon Web Services",
-      date: "2023",
-      category: "Cloud",
+      name: "OCNA Routing & Switching",
+      issuer: "TP-Link",
+      date: "2025",
+      category: "Routing & Switching",
       verified: true,
-      description: "AWS cloud concepts, security, technology, and billing & pricing.",
-      certificateUrl: "https://aws.amazon.com/verification/PQR678"
+      description: "Omada SDN platform, wireless network design, implementation, and management.",
+      certificateUrl: "https://tp-link.com/academy/verify/MNO345"
     },
     {
-      name: "Alibaba Cloud Associate",
-      issuer: "Alibaba Cloud",
+      name: "AWS Academy Graduate - AWS Academy Cloud Operations",
+      issuer: "Amazon Web Services",
       date: "2022",
       category: "Cloud",
       verified: true,
-      description: "Alibaba Cloud products, services, and solutions for cloud computing.",
-      certificateUrl: "https://edu.alibabacloud.com/verify/STU901"
+      description: "AWS cloud concepts, security, technology, and billing & pricing.",
+      certificateUrl: "https://www.credly.com/badges/9d12da2b-777e-4538-b951-1da916092f76/public_url"
     },
     {
-      name: "Fortinet Network Security Fundamentals",
+      name: "ACA Big Data Certification",
+      issuer: "Alibaba Cloud",
+      date: "2023",
+      category: "Cloud",
+      verified: true,
+      description: "Alibaba Cloud products, services, and solutions for cloud computing.",
+      certificateUrl: "https://edu.alibabacloud.com/certification/aca_bigdata?spm=a2c4d.11423077.0.0.110a12dbMCnwjq"
+    },
+    {
+      name: "Fortinet Certified Associate Cybersecurity",
       issuer: "Fortinet",
-      date: "2021",
+      date: "2025",
       category: "Cybersecurity",
       verified: true,
       description: "Basic security concepts, threat landscape, and FortiGate firewall fundamentals.",
-      certificateUrl: "https://training.fortinet.com/verify/VWX234"
+      certificateUrl: "https://www.credly.com/badges/a3ed3f37-22d7-4a44-9ee5-d96d54a12f65/public_url"
     }
   ];
 
@@ -93,6 +102,7 @@ export function CertificationsSection() {
   };
 
   return (
+    
     <Section id="certifications" className="bg-muted/30">
       <div className="text-center mb-16">
         <Badge variant="outline" className="mb-4 text-primary border-primary">
@@ -176,28 +186,6 @@ export function CertificationsSection() {
       </div>
 
       {/* Certification Stats */}
-      <div className="mt-16">
-        <Card className="p-8 bg-card">
-          <div className="grid md:grid-cols-4 gap-6 text-center">
-            <div>
-              <div className="text-3xl font-bold text-primary mb-2">8</div>
-              <div className="text-muted-foreground">Total Sertifikasi</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-primary mb-2">5</div>
-              <div className="text-muted-foreground">Kategori Berbeda</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-primary mb-2">2023</div>
-              <div className="text-muted-foreground">Sertifikasi Terbaru</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-primary mb-2">100%</div>
-              <div className="text-muted-foreground">Status Aktif</div>
-            </div>
-          </div>
-        </Card>
-      </div>
     </Section>
   );
 }

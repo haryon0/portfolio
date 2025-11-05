@@ -1,0 +1,239 @@
+/* Contact Section (scoped) */
+.contact-section {
+  /* Use site tokens; keep scope local for maintainability */
+  --cs-gap: 1rem;
+  --cs-radius: var(--radius);
+  --cs-ring: hsl(var(--ring));
+  --cs-border: hsl(var(--border));
+  --cs-muted: hsl(var(--muted-foreground));
+  --cs-card-bg: hsl(var(--card));
+  --cs-card-fg: hsl(var(--card-foreground));
+}
+
+/* Layout: responsive grid for info cards */
+.contact-section .cards-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--cs-gap);
+}
+
+@media (min-width: 768px) {
+  .contact-section .cards-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Quick actions as responsive grid (larger tap targets) */
+.contact-section .contact-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+@media (min-width: 480px) {
+  .contact-section .contact-actions {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+}
+
+.contact-section .contact-action {
+  min-height: 44px; /* bigger tap targets */
+  min-width: 44px;
+}
+
+.contact-section .contact-action:focus-visible {
+  outline: 2px solid var(--cs-ring);
+  outline-offset: 2px;
+}
+
+/* Cards: subtle elevation and borders */
+.contact-section .contact-card {
+  background-color: var(--cs-card-bg);
+  color: var(--cs-card-fg);
+  border: 1px solid var(--cs-border);
+  border-radius: var(--cs-radius);
+  padding: 1rem;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease,
+    transform 0.2s ease;
+  box-shadow: var(--shadow-card, 0 2px 10px hsl(216 100% 25% / 0.05));
+}
+
+.contact-section .contact-card:hover {
+  box-shadow: 0 4px 16px hsl(var(--ring) / 0.08);
+  transform: translateY(-2px);
+}
+
+/* Links: clear affordance, accessible focus */
+.contact-section .contact-link {
+  color: hsl(var(--primary));
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 3px;
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+.contact-section .contact-link:hover {
+  text-decoration-color: currentColor;
+}
+
+.contact-section .contact-link:focus-visible {
+  outline: 2px solid var(--cs-ring);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Helper and message spacing to avoid layout shift */
+.contact-section .field-helper {
+  color: var(--cs-muted);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.contact-section .field-error {
+  color: hsl(var(--destructive));
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.contact-section .field-success {
+  color: hsl(var(--primary));
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* Form control consistency if a form is present in the section */
+.contact-section input[type="text"],
+.contact-section input[type="email"],
+.contact-section input[type="tel"],
+.contact-section input[type="url"],
+.contact-section input[type="search"],
+.contact-section input[type="password"],
+.contact-section select,
+.contact-section textarea {
+  border-radius: var(--cs-radius);
+}
+
+.contact-section input:focus-visible,
+.contact-section select:focus-visible,
+.contact-section textarea:focus-visible {
+  outline: 2px solid var(--cs-ring);
+  outline-offset: 2px;
+}
+
+/* Error state via aria-invalid */
+.contact-section [aria-invalid="true"] {
+  border-color: hsl(var(--destructive)) !important;
+}
+
+/* Form-level feedback region space (if used) */
+.contact-section [role="status"][aria-live] {
+  margin-bottom: 1rem;
+  min-height: 1.25rem; /* keeps layout stable when content appears */
+}
+
+/* Reduced motion: disable large transforms, long animations */
+@media (prefers-reduced-motion: reduce) {
+  .contact-section .contact-card,
+  .contact-section .contact-action {
+    transition: none !important;
+    transform: none !important;
+  }
+
+  .contact-section .animate-shine {
+    animation: none !important;
+  }
+}
+
+/* Light/Dark support via prefers-color-scheme fallback (in case .dark class is not set) */
+@media (prefers-color-scheme: dark) {
+  .contact-section .contact-card {
+    background-color: var(--cs-card-bg);
+    border-color: var(--cs-border);
+  }
+}
+/* States for form controls: hover, active, disabled, invalid/success, busy */
+.contact-section input[type="text"],
+.contact-section input[type="email"],
+.contact-section input[type="tel"],
+.contact-section input[type="url"],
+.contact-section input[type="search"],
+.contact-section input[type="password"],
+.contact-section select,
+.contact-section textarea {
+  border: 1px solid var(--cs-border);
+  background-color: transparent;
+  color: inherit;
+}
+
+.contact-section input:hover,
+.contact-section select:hover,
+.contact-section textarea:hover {
+  border-color: hsl(var(--ring) / 0.4);
+}
+
+.contact-section input:active,
+.contact-section select:active,
+.contact-section textarea:active {
+  border-color: hsl(var(--ring));
+}
+
+.contact-section input:disabled,
+.contact-section select:disabled,
+.contact-section textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: hsl(var(--muted) / 0.15);
+}
+
+/* Invalid and success (ARIA and data-attributes) */
+.contact-section [aria-invalid="true"],
+.contact-section [data-invalid="true"] {
+  border-color: hsl(var(--destructive)) !important;
+  box-shadow: 0 0 0 1px hsl(var(--destructive) / 0.6) inset;
+}
+
+.contact-section [data-success="true"] {
+  border-color: hsl(var(--primary)) !important;
+  box-shadow: 0 0 0 1px hsl(var(--primary) / 0.5) inset;
+}
+
+/* Busy/loading states */
+.contact-section [aria-busy="true"] {
+  cursor: progress;
+}
+
+.contact-section button[aria-busy="true"],
+.contact-section .contact-action[aria-busy="true"] {
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+/* Checkbox and radio consistent theming via accent-color */
+.contact-section input[type="checkbox"],
+.contact-section input[type="radio"] {
+  accent-color: hsl(var(--primary));
+}
+
+/* Buttons in actions: hover/active/focus-visible already handled by component; add subtle transform and shadow restrictions */
+.contact-section .contact-action:hover {
+  filter: saturate(1.05);
+}
+
+.contact-section .contact-action:active {
+  transform: translateY(1px);
+}
+
+/* Maintain consistent spacing when helper/error messages appear below controls */
+.contact-section .form-field {
+  display: grid;
+  gap: 0.25rem;
+}
+
+/* Ensure readable typographic scale for headings inside section (without affecting global scale) */
+.contact-section h2 {
+  letter-spacing: -0.01em;
+}
+
+.contact-section h3 {
+  letter-spacing: -0.005em;
+}
