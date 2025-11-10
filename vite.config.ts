@@ -8,6 +8,17 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    allowedHosts: [
+      'delmy-experiential-tediously.ngrok-free.dev',
+      '.ngrok-free.dev', // Allow semua subdomain ngrok
+      '.ngrok.io',       // Ngrok paid domains
+    ],
+    // Optional: Jika HMR (Hot Module Replacement) bermasalah via ngrok
+    hmr: {
+      protocol: 'wss',
+      host: 'delmy-experiential-tediously.ngrok-free.dev',
+      clientPort: 443,
+    }
   },
   plugins: [
     react(),

@@ -3,10 +3,19 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { supabase, BlogPost } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { ArrowLeft, Save, Eye } from 'lucide-react';
+import { ArrowLeft, Save, Eye, Plus, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export function AdminPostEditor() {
   const { id } = useParams();
@@ -25,11 +34,36 @@ export function AdminPostEditor() {
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
 
+  // ===== NEW: Category Management State =====
+  const [categories, setCategories] = useState<string[]>([
+    'Network',
+    'Infrastructure',
+    'Security',
+    'VoIP',
+    'Tutorial'
+  ]);
+  const [newCategory, setNewCategory] = useState('');
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  // =========================================
+
   useEffect(() => {
     if (id) {
       fetchPost(id);
     }
   }, [id]);
+
+  // ===== NEW: Load categories from localStorage =====
+  useEffect(() => {
+    const savedCategories = localStorage.getItem('blogCategories');
+    if (savedCategories) {
+      try {
+        setCategories(JSON.parse(savedCategories));
+      } catch (error) {
+        console.error('Failed to load categories:', error);
+      }
+    }
+  }, []);
+  // =================================================
 
   async function fetchPost(postId: string) {
     try {
@@ -71,6 +105,52 @@ export function AdminPostEditor() {
       slug: generateSlug(title),
     }));
   };
+
+  // ===== NEW: Category Management Functions =====
+  const saveCategories = (newCategories: string[]) => {
+    localStorage.setItem('blogCategories', JSON.stringify(newCategories));
+    setCategories(newCategories);
+  };
+
+  const handleAddCategory = () => {
+    if (!newCategory.trim()) {
+      toast.error('Category name cannot be empty');
+      return;
+    }
+
+    const trimmedCategory = newCategory.trim();
+    
+    if (categories.includes(trimmedCategory)) {
+      toast.error('Category already exists');
+      return;
+    }
+
+    const updatedCategories = [...categories, trimmedCategory];
+    saveCategories(updatedCategories);
+    setFormData(prev => ({ ...prev, category: trimmedCategory }));
+    setNewCategory('');
+    setIsDialogOpen(false);
+    toast.success(`Category "${trimmedCategory}" added successfully`);
+  };
+
+  const handleDeleteCategory = (categoryToDelete: string) => {
+    const defaultCategories = ['Network', 'Infrastructure', 'Security', 'VoIP', 'Tutorial'];
+    
+    if (defaultCategories.includes(categoryToDelete)) {
+      toast.error('Cannot delete default categories');
+      return;
+    }
+
+    const updatedCategories = categories.filter(cat => cat !== categoryToDelete);
+    saveCategories(updatedCategories);
+    
+    if (formData.category === categoryToDelete) {
+      setFormData(prev => ({ ...prev, category: '' }));
+    }
+    
+    toast.success(`Category "${categoryToDelete}" deleted`);
+  };
+  // ==============================================
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -246,24 +326,119 @@ export function AdminPostEditor() {
                   />
                 </div>
 
-                {/* Category */}
+                {/* ===== UPDATED: Category with Add Button ===== */}
                 <div>
                   <label className="block text-sm font-medium mb-2">
                     Category
                   </label>
-                  <select
-                    value={formData.category}
-                    onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
-                    className="w-full px-4 py-2 rounded-lg border border-border focus:border-primary outline-none transition-colors"
-                  >
-                    <option value="">Select category</option>
-                    <option value="Network">Network</option>
-                    <option value="Infrastructure">Infrastructure</option>
-                    <option value="Security">Security</option>
-                    <option value="VoIP">VoIP</option>
-                    <option value="Tutorial">Tutorial</option>
-                  </select>
+                  <div className="flex gap-2">
+                    <select
+                      value={formData.category}
+                      onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
+                      className="flex-1 px-4 py-2 rounded-lg border border-border focus:border-primary outline-none transition-colors"
+                    >
+                      <option value="">Select category</option>
+                      {categories.map((cat) => (
+                        <option key={cat} value={cat}>{cat}</option>
+                      ))}
+                    </select>
+
+                    {/* Add Category Button */}
+                    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button 
+                          type="button"
+                          variant="outline" 
+                          size="icon" 
+                          title="Add new category"
+                        >
+                          <Plus className="h-4 w-4" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-md">
+                        <DialogHeader>
+                          <DialogTitle>Manage Categories</DialogTitle>
+                          <DialogDescription>
+                            Add new categories or remove existing ones
+                          </DialogDescription>
+                        </DialogHeader>
+
+                        {/* Current Categories */}
+                        <div className="space-y-3">
+                          <label className="block text-sm font-medium">
+                            Current Categories
+                          </label>
+                          <div className="flex flex-wrap gap-2 max-h-40 overflow-y-auto p-3 border rounded-lg bg-muted/30">
+                            {categories.map((cat) => (
+                              <div
+                                key={cat}
+                                className="flex items-center gap-1 bg-primary/10 text-primary px-3 py-1.5 rounded-full text-sm font-medium"
+                              >
+                                <span>{cat}</span>
+                                {!['Network', 'Infrastructure', 'Security', 'VoIP', 'Tutorial'].includes(cat) && (
+                                  <button
+                                    type="button"
+                                    onClick={() => handleDeleteCategory(cat)}
+                                    className="hover:text-red-600 ml-1 transition-colors"
+                                    title="Delete category"
+                                  >
+                                    <X className="h-3 w-3" />
+                                  </button>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                          <p className="text-xs text-muted-foreground">
+                            💡 Default categories cannot be deleted
+                          </p>
+                        </div>
+
+                        {/* Add New Category */}
+                        <div className="space-y-3">
+                          <label className="block text-sm font-medium">
+                            Add New Category
+                          </label>
+                          <div className="flex gap-2">
+                            <input
+                              type="text"
+                              placeholder="e.g., Cloud Computing"
+                              value={newCategory}
+                              onChange={(e) => setNewCategory(e.target.value)}
+                              onKeyPress={(e) => {
+                                if (e.key === 'Enter') {
+                                  e.preventDefault();
+                                  handleAddCategory();
+                                }
+                              }}
+                              className="flex-1 px-4 py-2 rounded-lg border border-border focus:border-primary outline-none transition-colors"
+                            />
+                            <Button 
+                              type="button"
+                              onClick={handleAddCategory} 
+                              size="sm"
+                            >
+                              Add
+                            </Button>
+                          </div>
+                        </div>
+
+                        <DialogFooter>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => {
+                              setIsDialogOpen(false);
+                              setNewCategory('');
+                            }}
+                          >
+                            Close
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
                 </div>
+                {/* ============================================ */}
               </div>
 
               {/* Description */}
